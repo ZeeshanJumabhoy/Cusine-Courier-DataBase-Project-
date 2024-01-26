@@ -1,0 +1,472 @@
+CREATE TABLE Customer (
+     	CustomerID SERIAL PRIMARY KEY,
+     	firstname VARCHAR(50),
+    	lastname VARCHAR(50),
+    	phone VARCHAR(20),
+    	Password VARCHAR(50),
+    	Email VARCHAR(100) UNIQUE,
+    	Address VARCHAR(100),
+    	City VARCHAR(50),
+	State VARCHAR(50));
+
+CREATE TABLE Employee (
+    EmployeeID SERIAL PRIMARY KEY,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    email VARCHAR(50) UNIQUE,
+    Password VARCHAR(50),
+    phone  VARCHAR(20),
+    Address VARCHAR(100),
+    City VARCHAR(50),
+    State VARCHAR(50)
+);
+
+
+CREATE TABLE Category (
+    CategoryID SERIAL PRIMARY KEY ,
+    CategoryName VARCHAR(255)
+);
+
+CREATE TABLE Restaurant (
+    RestaurantID SERIAL PRIMARY KEY,
+    RestaurantName VARCHAR(255),
+    CategoryID INT,
+    Location VARCHAR(255),
+    FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
+);
+
+CREATE TABLE Item (
+    ItemID SERIAL PRIMARY KEY,
+    ItemName VARCHAR(255),
+    Price DECIMAL(10, 2),
+    RestaurantID INT,
+    FOREIGN KEY (RestaurantID) REFERENCES Restaurant(RestaurantID)
+);
+
+
+CREATE TABLE Order1 (
+    OrderID SERIAL PRIMARY KEY,
+    CustomerID INT,
+    OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Status VARCHAR(50),
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+);
+
+
+CREATE TABLE DeliveryGuy (
+    DeliveryGuyID SERIAL PRIMARY KEY,
+    DeliveryGuyName VARCHAR(255),
+    Status VARCHAR(10) DEFAULT 'available',
+    vehicleno varchar(20) UNIQUE,
+    vehicle_name VARCHAR(50) DEFAULT "CD70",
+    Phone VARCHAR(20)
+);
+
+
+CREATE TABLE DeliveryStatus (
+    StatusID SERIAL PRIMARY KEY,
+    StatusName VARCHAR(50) UNIQUE
+);
+
+
+CREATE TABLE DeliveryAssignment (
+    AssignmentID SERIAL PRIMARY KEY,
+    OrderID INT,
+    DeliveryGuyID INT,
+    Payment INT,
+    StatusID INT,
+    AssignmentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Order1(OrderID),
+    FOREIGN KEY (DeliveryGuyID) REFERENCES DeliveryGuy(DeliveryGuyID),
+    FOREIGN KEY (StatusID) REFERENCES DeliveryStatus(StatusID)
+);
+
+
+CREATE TABLE Payment (
+    PaymentID SERIAL PRIMARY KEY,
+    OrderID INT,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Order1(OrderID)
+);
+
+
+INSERT INTO Customer (firstname, lastname, phone, Password, Email, Address, City, State)
+VALUES
+('Alice', 'Johnson', '555-1234', 'pass123', 'alice@example.com', '123 Oak St', 'Somewhere', 'CA'),
+('Bob', 'Smith', '555-5678', 'pass456', 'bob@example.com', '456 Pine St', 'Anytown', 'NY'),
+('Charlie', 'Davis', '555-9876', 'pass789', 'charlie@example.com', '789 Maple St', 'Nowhere', 'NA'),
+('David', 'Brown', '555-4321', 'pass321', 'david@example.com', '432 Elm St', 'Anothercity', 'TX'),
+('Eva', 'Garcia', '555-8765', 'pass654', 'eva@example.com', '876 Birch St', 'Somecity', 'NY'),
+('Frank', 'Taylor', '555-2345', 'pass234', 'frank@example.com', '234 Cedar St', 'Elsewhere', 'WA'),
+('Grace', 'Miller', '555-5678', 'pass567', 'grace@example.com', '567 Walnut St', 'Nowhere', 'NA'),
+('Henry', 'Clark', '555-8765', 'pass876', 'henry@example.com', '876 Pine St', 'Anothercity', 'TX'),
+('Ivy', 'Moore', '555-1234', 'pass987', 'ivy@example.com', '123 Maple St', 'Elsewhere', 'WA'),
+('Jack', 'Turner', '555-4321', 'pass210', 'jack@example.com', '432 Cedar St', 'Nowhere', 'NA');
+
+
+INSERT INTO Employee (firstName, lastName, email, Password, phone, Address, City, State)
+VALUES
+('John', 'Doe', 'john.doe@example.com', 'pass123', '555-1234', '123 Oak St', 'Somewhere', 'CA'),
+('Jane', 'Smith', 'jane.smith@example.com', 'pass456', '555-5678', '456 Pine St', 'Anytown', 'NY'),
+('Bob', 'Johnson', 'bob.johnson@example.com', 'pass789', '555-9876', '789 Maple St', 'Nowhere', 'NA'),
+('Alice', 'Williams', 'alice@example.com', 'pass321', '555-4321', '432 Elm St', 'Anothercity', 'TX'),
+('Charlie', 'Garcia', 'charlie@example.com', 'pass654', '555-8765', '876 Birch St', 'Somecity', 'NY'),
+('Eva', 'Taylor', 'eva@example.com', 'pass234', '555-2345', '234 Cedar St', 'Elsewhere', 'WA'),
+('Frank', 'Clark', 'frank@example.com', 'pass567', '555-5678', '567 Walnut St', 'Nowhere', 'NA'),
+('Grace', 'Moore', 'grace@example.com', 'pass876', '555-8765', '876 Pine St', 'Anothercity', 'TX'),
+('Henry', 'Brown', 'henry@example.com', 'pass987', '555-1234', '123 Maple St', 'Elsewhere', 'WA'),
+('Ivy', 'Turner', 'ivy@example.com', 'pass210', '555-4321', '432 Cedar St', 'Nowhere', 'NA');
+
+
+INSERT INTO Category (CategoryName)
+VALUES
+('Desi'),
+('Chinese'),
+('Fast Food'),
+('Italian'),
+('BBQ');
+
+
+INSERT INTO Restaurant (RestaurantName, CategoryID, Location)
+VALUES
+('Spice Paradise', 1, '123 Main St'),
+('Dragon Delight', 2, '456 Oak St'),
+('Quick Bites', 3, '789 Elm St'),
+('Pasta Haven', 4, '234 Maple St'),
+('Smokehouse Grill', 5, '567 Pine St'),
+('Flavors of India', 1, '876 Cedar St'),
+('Wok n Roll', 2, '432 Birch St'),
+('Speedy Eats', 3, '789 Walnut St'),
+('Taste of Italy', 4, '345 Pine St'),
+('Grill Master', 5, '678 Elm St');
+
+
+INSERT INTO Item (ItemName, Price, RestaurantID)
+VALUES
+('Spicy Curry', 12.99, 31),
+('Dragon Roll', 8.99, 32),
+('Quick Combo', 6.49, 33),
+('Pasta Primavera', 14.99, 34),
+('Smokehouse Platter', 18.99, 35),
+('Biryani Feast', 10.99, 36),
+('Wok Special', 9.99, 37),
+('Speedy Burger', 5.99, 38),
+('Italian Delight', 13.49, 39),
+('Grilled Steak', 16.99, 40);
+
+
+INSERT INTO Item (ItemName, Price, RestaurantID)
+VALUES
+('Spicy Curry', 12.99, 1),
+('Dragon Roll', 8.99, 2),
+('Quick Combo', 6.49, 3),
+('Pasta Primavera', 14.99, 4),
+('Smokehouse Platter', 18.99, 5),
+('Biryani Feast', 10.99, 6),
+('Wok Special', 9.99, 7),
+('Speedy Burger', 5.99, 8),
+('Italian Delight', 13.49, 9),
+('Grilled Steak', 16.99, 10);
+
+
+INSERT INTO Order1 (CustomerID, Status, TotalAmount)
+VALUES
+(1, 'Pending', 25.99),
+(2, 'Completed', 32.49),
+(3, 'Shipped', 18.99),
+(4, 'Processing', 45.99),
+(5, 'Pending', 22.49),
+(6, 'Completed', 30.99),
+(7, 'Shipped', 15.99),
+(8, 'Processing', 38.49),
+(9, 'Pending', 27.99),
+(10, 'Completed', 36.49);
+
+
+INSERT INTO DeliveryGuy (DeliveryGuyName, vehicleno, Phone)
+VALUES
+('John Doe', 'ABC123', '1234567890'),
+('Jane Smith', 'XYZ456', '9876543210'),
+('Bob Johnson', 'DEF789', '6543219870'),
+('Alice Williams', 'GHI321', '9870123456'),
+('Charlie Garcia', 'JKL987', '4567890123'),
+('Eva Taylor', 'MNO654', '7890123456'),
+('Frank Clark', 'PQR321', '5678901234'),
+('Grace Moore', 'STU654', '3456789012'),
+('Henry Brown', 'VWX987', '6789012345'),
+('Ivy Turner', 'YZA321', '8901234567');
+
+
+
+CREATE OR REPLACE FUNCTION update_order_total()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Order1
+    SET TotalAmount = (SELECT SUM(i.Price * c.Quantity)
+                       FROM Cart c
+                       JOIN Item i ON c.ItemID = i.ItemID
+                       WHERE c.OrderID = NEW.OrderID)
+    WHERE Order1.OrderID = NEW.OrderID;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_order_total_trigger
+AFTER INSERT OR UPDATE ON Cart
+FOR EACH ROW
+EXECUTE FUNCTION update_order_total();
+
+
+
+CREATE OR REPLACE FUNCTION auto_assign_delivery_guy()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.Status = 'pending' THEN
+        UPDATE DeliveryAssignment
+        SET DeliveryGuyID = (SELECT DeliveryGuyID
+                             FROM DeliveryGuy
+                             WHERE Status = 'available'
+                             LIMIT 1)
+        WHERE OrderID = NEW.OrderID;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER auto_assign_delivery_guy_trigger
+AFTER UPDATE ON Order1
+FOR EACH ROW
+EXECUTE FUNCTION auto_assign_delivery_guy();
+
+
+
+
+CREATE OR REPLACE FUNCTION update_delivery_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.StatusID = (SELECT StatusID FROM DeliveryStatus WHERE StatusName = 'delivered') THEN
+        UPDATE DeliveryAssignment
+        SET AssignmentDate = CURRENT_TIMESTAMP
+        WHERE AssignmentID = NEW.AssignmentID;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_delivery_status_trigger
+AFTER UPDATE ON DeliveryAssignment
+FOR EACH ROW
+EXECUTE FUNCTION update_delivery_status();
+
+
+
+CREATE OR REPLACE FUNCTION prevent_duplicate_email()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM User WHERE Email = NEW.Email) THEN
+        RAISE EXCEPTION 'Email address already exists';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_duplicate_email_trigger
+BEFORE INSERT ON User
+FOR EACH ROW
+EXECUTE FUNCTION prevent_duplicate_email();
+
+
+
+CREATE TABLE ItemBackup (
+    BackupID SERIAL PRIMARY KEY,
+    ItemID INT,
+    ItemName VARCHAR(255),
+    Description TEXT,
+    Price DECIMAL(10, 2),
+    RestaurantID INT,
+    ChangeType VARCHAR(20), -- 'INSERT', 'UPDATE', 'DELETE'
+    ChangeDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
+);
+
+
+CREATE OR REPLACE FUNCTION item_backup_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO ItemBackup (ItemID, ItemName, Description, Price, RestaurantID, ChangeType)
+        VALUES (NEW.ItemID, NEW.ItemName, NEW.Description, NEW.Price, NEW.RestaurantID, 'INSERT');
+    ELSIF TG_OP = 'UPDATE' THEN
+        INSERT INTO ItemBackup (ItemID, ItemName, Description, Price, RestaurantID, ChangeType)
+        VALUES (OLD.ItemID, OLD.ItemName, OLD.Description, OLD.Price, OLD.RestaurantID, 'DELETE');
+
+        INSERT INTO ItemBackup (ItemID, ItemName, Description, Price, RestaurantID, ChangeType)
+        VALUES (NEW.ItemID, NEW.ItemName, NEW.Description, NEW.Price, NEW.RestaurantID, 'UPDATE');
+    ELSIF TG_OP = 'DELETE' THEN
+        INSERT INTO ItemBackup (ItemID, ItemName, Description, Price, RestaurantID, ChangeType)
+        VALUES (OLD.ItemID, OLD.ItemName, OLD.Description, OLD.Price, OLD.RestaurantID, 'DELETE');
+    END IF;
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER item_backup_trigger
+AFTER INSERT OR UPDATE OR DELETE ON Item
+FOR EACH ROW
+EXECUTE FUNCTION item_backup_trigger();
+
+
+
+
+
+CREATE OR REPLACE FUNCTION CheckAllDeliveryGuysBusy()
+RETURNS TRIGGER AS $$
+DECLARE
+    totalDeliveryGuys INT;
+    busyDeliveryGuys INT;
+BEGIN
+    -- Assuming 10 delivery guys for this example
+    totalDeliveryGuys := 10;
+
+    -- Count the number of busy delivery guys
+    SELECT COUNT(*) INTO busyDeliveryGuys
+    FROM DeliveryGuy
+    WHERE Status = 'busy';
+
+    -- Check if all delivery guys are busy
+    IF busyDeliveryGuys = totalDeliveryGuys THEN
+        -- Trigger your desired action here (e.g., raise an alert, log, etc.)
+        RAISE EXCEPTION 'All delivery guys are busy. Cannot accept new assignments.';
+    END IF;
+
+    -- If the condition is not met, return the NEW row
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER check_all_delivery_guys_busy
+BEFORE INSERT ON DeliveryAssignment
+FOR EACH ROW
+EXECUTE FUNCTION CheckAllDeliveryGuysBusy();
+
+
+
+
+-- Example of a transaction to place an order
+BEGIN;
+    -- Insert order details
+    INSERT INTO Order1 (CustomerID, OrderDate, Status, TotalAmount)
+    VALUES (1, CURRENT_TIMESTAMP, 'pending', 0.00)
+    RETURNING OrderID INTO my_order_id;
+
+    -- Insert items into the cart
+    INSERT INTO Cart (OrderID, ItemID, Quantity, TotalPrice)
+    VALUES (my_order_id, 101, 2, (SELECT Price * 2 FROM Item WHERE ItemID = 101)),
+           (my_order_id, 102, 1, (SELECT Price FROM Item WHERE ItemID = 102));
+
+    -- Update total amount in the order
+    UPDATE Order1
+    SET TotalAmount = (SELECT SUM(TotalPrice) FROM Cart WHERE OrderID = my_order_id)
+    WHERE OrderID = my_order_id;
+
+    -- Perform payment (additional logic needed)
+    INSERT INTO Payment (OrderID, Amount, PaymentDate)
+    VALUES (my_order_id, (SELECT TotalAmount FROM Order1 WHERE OrderID = my_order_id), CURRENT_TIMESTAMP);
+
+COMMIT;
+
+
+
+-- Example of a transaction to update order status
+BEGIN;
+    UPDATE Order1
+    SET Status = 'delivered'
+    WHERE OrderID = 1;
+
+    -- Additional logic (e.g., trigger) for handling the update and notifying relevant parties
+
+COMMIT;
+
+
+
+-- Example of a transaction to add an item to the menu
+BEGIN;
+    INSERT INTO Item (ItemName, Price, RestaurantID)
+    VALUES ('New Item', 15.99, 201)
+    RETURNING ItemID INTO my_item_id;
+
+    -- Additional logic (e.g., trigger) for handling the addition and updating related tables
+
+COMMIT;
+
+
+
+-- Example of a transaction to assign a delivery guy
+BEGIN;
+    UPDATE DeliveryAssignment
+    SET DeliveryGuyID = 301,
+        StatusID = (SELECT StatusID FROM DeliveryStatus WHERE StatusName = 'assigned')
+    WHERE AssignmentID = 1;
+
+    -- Additional logic (e.g., trigger) for handling the assignment and notifying relevant parties
+
+COMMIT;
+
+
+-- Example of a transaction to update delivery guy status
+BEGIN;
+    UPDATE DeliveryGuy
+    SET Status = 'on delivery'
+    WHERE DeliveryGuyID = 301;
+
+    -- Additional logic (e.g., trigger) for handling the update and notifying relevant parties
+
+COMMIT;
+
+
+
+-- Example of a transaction to cancel an order
+BEGIN;
+    UPDATE Order1
+    SET Status = 'canceled'
+    WHERE OrderID = 1;
+
+    -- Remove items from the cart
+    DELETE FROM Cart
+    WHERE OrderID = 1;
+
+    -- Additional logic (e.g., trigger) for handling the cancellation and notifying relevant parties
+
+COMMIT;
+
+
+-- Example of a transaction to add a category
+BEGIN;
+    INSERT INTO Category (CategoryName)
+    VALUES ('Desserts')
+    RETURNING CategoryID INTO my_category_id;
+
+    -- Additional logic (e.g., trigger) for handling the addition and updating related tables
+
+COMMIT;
+
+
+
+-- Example of a transaction to update restaurant location
+BEGIN;
+    UPDATE Restaurant
+    SET Location = 'New Location'
+    WHERE RestaurantID = 201;
+
+    -- Additional logic (e.g., trigger) for handling the update and notifying relevant parties
+
+COMMIT;
+
